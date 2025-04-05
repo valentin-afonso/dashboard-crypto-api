@@ -2,12 +2,9 @@ import { Hono } from "hono";
 import { logger } from "hono/logger";
 import { routes } from "./routes";
 import { authMiddleware } from "./middleware/auth";
+import { EnvBindings } from "./types/env";
 
-type Bindings = {
-  AUTH_TOKEN: string;
-};
-
-const app = new Hono<{ Bindings: Bindings }>();
+const app = new Hono<{ Bindings: EnvBindings }>();
 
 // Middleware
 app.use("/api/*", logger());

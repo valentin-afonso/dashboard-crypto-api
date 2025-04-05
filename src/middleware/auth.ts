@@ -1,12 +1,9 @@
 import { bearerAuth } from "hono/bearer-auth";
 import { Context, Next } from "hono";
-
-type Bindings = {
-  AUTH_TOKEN: string;
-};
+import { EnvBindings } from "../types/env";
 
 export async function authMiddleware(
-  c: Context<{ Bindings: Bindings }>,
+  c: Context<{ Bindings: EnvBindings }>,
   next: Next
 ) {
   const token = c.env.AUTH_TOKEN;
