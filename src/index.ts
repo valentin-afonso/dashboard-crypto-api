@@ -12,7 +12,7 @@ app.use("/api/*", logger());
 app.use(
   "*",
   cors({
-    origin: "http://localhost:5173",
+    origin: ["http://localhost:5173", "https://dashboard-crypto-app.pages.dev"],
   })
 );
 app.use("/api/*", authMiddleware);
