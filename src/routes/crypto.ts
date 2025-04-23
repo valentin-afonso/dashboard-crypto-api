@@ -13,4 +13,11 @@ cryptoRoutes.get(`/coins/markets`, async (c) => {
   return proxy(getCoingeckoUrl(c, "coins/markets", { vs_currency, sparkline }));
 });
 
+cryptoRoutes.get(`/coins/:symbol/markets`, async (c) => {
+  const symbol = c.req.param("symbol");
+  const { vs_currency, days } = c.req.query();
+  return proxy(
+    getCoingeckoUrl(c, `coins/${symbol}/market_chart`, { vs_currency, days })
+  );
+});
 export { cryptoRoutes };
