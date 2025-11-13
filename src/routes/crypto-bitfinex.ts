@@ -74,9 +74,27 @@ cryptoBitfinexRoutes.post("/calc/trade/avg", async (c) => {
   const endpoint = `${base_url}calc/trade/avg?symbol=${symbol}&amount=${amount}&period=${period}&rate_limit=${rate_limit}`;
   return proxy(endpoint);
 });
+// Calculate the exchange rate between two currencies
 cryptoBitfinexRoutes.post("/calc/fx", async (c) => {
-  const { ccy1, ccy2 } = c.req.query();
-  const endpoint = `${base_url}calc/fx?ccy1=${ccy1}&ccy2=${ccy2}`;
-  return proxy(endpoint);
+  const queryParams = c.req.query();
+  const body = await c.req
+    .json<{ ccy1?: string; ccy2?: string }>()
+    .catch(() => null);
+  const ccy1 = body?.ccy1?.trim() || queryParams.ccy1?.trim() || "BTC";
+  const ccy2 = body?.ccy2?.trim() || queryParams.ccy2?.trim() || "USD";
+
+  if (!ccy1 || !ccy2) {
+    return c.json({ message: "Both ccy1 and ccy2 are required." }, 400);
+  }
+
+  const endpoint = `${base_url}calc/fx`;
+
+  return proxy(endpoint, {
+    method: "POST",
+    body: JSON.stringify({ ccy1, ccy2 }),
+    headers: {
+      "content-type": "application/json",
+    },
+  });
 });
 export { cryptoBitfinexRoutes };
