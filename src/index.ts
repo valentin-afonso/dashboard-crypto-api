@@ -18,7 +18,17 @@ app.use(
 app.use("/api/*", authMiddleware);
 
 // const app = new Hono<{ Bindings: CloudflareBindings }>();
-
+app.use(
+  "/api/auth/*", // or replace with "*" to enable cors for all routes
+  cors({
+    origin: ["http://localhost:5173", "https://dashboard-crypto-app.pages.dev"],
+    allowHeaders: ["Content-Type", "Authorization"],
+    allowMethods: ["POST", "GET", "OPTIONS"],
+    exposeHeaders: ["Content-Length"],
+    maxAge: 600,
+    credentials: true,
+  })
+);
 app.on(["GET", "POST"], "/api/auth/*", (c) => {
   return auth(c.env).handler(c.req.raw);
 });
