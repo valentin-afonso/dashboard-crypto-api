@@ -2,10 +2,10 @@ import { Hono } from "hono";
 import { logger } from "hono/logger";
 import { routes } from "./routes";
 import { authMiddleware } from "./middleware/auth";
-import { EnvBindings } from "./types/env";
 import { cors } from "hono/cors";
+import { auth } from "./lib/better-auth";
 
-const app = new Hono<{ Bindings: EnvBindings }>();
+const app = new Hono<{ Bindings: CloudflareBindings }>();
 
 // Middleware
 app.use("/api/*", logger());
@@ -16,6 +16,12 @@ app.use(
   })
 );
 app.use("/api/*", authMiddleware);
+
+// const app = new Hono<{ Bindings: CloudflareBindings }>();
+
+app.on(["GET", "POST"], "/api/auth/*", (c) => {
+  return auth(c.env).handler(c.req.raw);
+});
 
 // Routes handling
 app.route("/api", routes);
