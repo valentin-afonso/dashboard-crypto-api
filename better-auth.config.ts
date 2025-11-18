@@ -10,6 +10,7 @@ import { betterAuth } from "better-auth";
 import { betterAuthOptions } from "./src/lib/better-auth/options";
 import { config } from "dotenv";
 import { resolve } from "path";
+import * as schema from "./src/db/schema";
 
 // Load environment variables from .dev.vars
 config({ path: resolve(process.cwd(), ".dev.vars") });
@@ -29,11 +30,19 @@ if (!BETTER_AUTH_SECRET) {
 }
 
 const sql = neon(DATABASE_URL);
-const db = drizzle(sql);
+const db = drizzle(sql, { schema });
 
 export const auth: ReturnType<typeof betterAuth> = betterAuth({
   ...betterAuthOptions,
-  database: drizzleAdapter(db, { provider: "pg" }),
+  database: drizzleAdapter(db, {
+    provider: "pg",
+    schema: {
+      user: schema.user,
+      session: schema.session,
+      account: schema.account,
+      verification: schema.verification,
+    },
+  }),
   baseURL: BETTER_AUTH_URL || "http://localhost:8787",
   secret: BETTER_AUTH_SECRET,
 });

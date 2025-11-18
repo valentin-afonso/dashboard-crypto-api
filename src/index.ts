@@ -13,13 +13,14 @@ app.use(
   "*",
   cors({
     origin: ["http://localhost:5173", "https://dashboard-crypto-app.pages.dev"],
+    credentials: true,
   })
 );
 app.use("/api/*", authMiddleware);
 
-// const app = new Hono<{ Bindings: CloudflareBindings }>();
+// Better Auth routes (must be defined before other /api routes)
 app.use(
-  "/api/auth/*", // or replace with "*" to enable cors for all routes
+  "/api/auth/*",
   cors({
     origin: ["http://localhost:5173", "https://dashboard-crypto-app.pages.dev"],
     allowHeaders: ["Content-Type", "Authorization"],
@@ -29,12 +30,19 @@ app.use(
     credentials: true,
   })
 );
-app.on(["GET", "POST"], "/api/auth/*", (c) => {
-  return auth(c.env).handler(c.req.raw);
+app.on(["GET", "POST"], "/api/auth/*", async (c) => {
+  const response = await auth(c.env).handler(c.req.raw);
+  return response;
 });
 
 // Routes handling
 app.route("/api", routes);
+
+// Error handling
+app.onError((err, c) => {
+  console.error("Unhandled error:", err);
+  return c.json({ error: "Internal server error", message: err.message }, 500);
+});
 
 // 404 handling
 app.notFound((c) => {
