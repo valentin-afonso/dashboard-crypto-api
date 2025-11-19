@@ -54,5 +54,12 @@ export const auth = (
       "http://localhost:5173",
       "https://dashboard-crypto-app.pages.dev",
     ],
+    advanced: {
+      useSecureCookies: true,
+      crossSubDomainCookies: {
+        enabled: true,
+        domain: "dashboard-crypto-app.pages.dev",
+      },
+    },
   });
 };
