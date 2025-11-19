@@ -12,7 +12,7 @@ app.use("/api/*", logger());
 app.use(
   "*",
   cors({
-    origin: ["http://localhost:5173", "https://dashboard-crypto-app.pages.dev"],
+    origin: ["http://localhost:5173", "https://coinboard-by.valafso.com"],
     credentials: true,
   })
 );
@@ -21,7 +21,7 @@ app.use("/api/*", authMiddleware);
 // Better Auth routes (must be defined before other /api routes)
 const allowedOrigins = [
   "http://localhost:5173",
-  "https://dashboard-crypto-app.pages.dev",
+  "https://coinboard-by.valafso.com",
 ];
 
 app.options("/api/auth/*", async (c) => {

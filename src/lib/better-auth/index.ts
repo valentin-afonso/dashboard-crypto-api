@@ -52,13 +52,13 @@ export const auth = (
     // Additional options that depend on env ...
     trustedOrigins: [
       "http://localhost:5173",
-      "https://dashboard-crypto-app.pages.dev",
+      "https://coinboard-by.valafso.com",
     ],
     advanced: {
       useSecureCookies: true,
       crossSubDomainCookies: {
         enabled: true,
-        domain: "dashboard-crypto-app.pages.dev",
+        domain: "coinboard-by.valafso.com",
       },
     },
   });
