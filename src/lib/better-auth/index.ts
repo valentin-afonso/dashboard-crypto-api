@@ -21,6 +21,17 @@ export const auth = (
     throw new Error("BETTER_AUTH_URL environment variable is required");
   }
 
+  // Normalize baseURL to ensure it has a protocol
+  let baseURL = env.BETTER_AUTH_URL.trim();
+  if (!baseURL.startsWith("http://") && !baseURL.startsWith("https://")) {
+    // Default to https for production URLs, http for localhost
+    if (baseURL.includes("localhost") || baseURL.includes("127.0.0.1")) {
+      baseURL = `http://${baseURL}`;
+    } else {
+      baseURL = `https://${baseURL}`;
+    }
+  }
+
   const sql = neon(env.DATABASE_URL);
   const db = drizzle(sql, { schema });
 
@@ -35,7 +46,7 @@ export const auth = (
         verification: schema.verification,
       },
     }),
-    baseURL: env.BETTER_AUTH_URL,
+    baseURL: baseURL,
     secret: env.BETTER_AUTH_SECRET,
 
     // Additional options that depend on env ...

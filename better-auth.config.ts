@@ -43,6 +43,6 @@ export const auth: ReturnType<typeof betterAuth> = betterAuth({
       verification: schema.verification,
     },
   }),
-  baseURL: BETTER_AUTH_URL || "http://localhost:8787",
+  baseURL: BETTER_AUTH_URL,
   secret: BETTER_AUTH_SECRET,
 });
