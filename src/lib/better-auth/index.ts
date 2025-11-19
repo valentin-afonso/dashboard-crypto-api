@@ -53,6 +53,7 @@ export const auth = (
     trustedOrigins: [
       "http://localhost:5173",
       "https://coinboard-by.valafso.com",
+      "https://valafso.com",
     ],
     advanced: {
       useSecureCookies: true,
