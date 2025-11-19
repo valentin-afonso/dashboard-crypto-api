@@ -19,20 +19,55 @@ app.use(
 app.use("/api/*", authMiddleware);
 
 // Better Auth routes (must be defined before other /api routes)
-app.use(
-  "/api/auth/*",
-  cors({
-    origin: ["http://localhost:5173", "https://dashboard-crypto-app.pages.dev"],
-    allowHeaders: ["Content-Type", "Authorization"],
-    allowMethods: ["POST", "GET", "OPTIONS"],
-    exposeHeaders: ["Content-Length"],
-    maxAge: 600,
-    credentials: true,
-  })
-);
-app.on(["GET", "POST"], "/api/auth/*", async (c) => {
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://dashboard-crypto-app.pages.dev",
+];
+
+app.options("/api/auth/*", async (c) => {
+  const origin = c.req.header("Origin");
+  if (origin && allowedOrigins.includes(origin)) {
+    return c.newResponse(null, {
+      status: 204,
+      headers: {
+        "Access-Control-Allow-Origin": origin,
+        "Access-Control-Allow-Methods":
+          "GET, POST, PUT, PATCH, DELETE, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type, Authorization",
+        "Access-Control-Allow-Credentials": "true",
+        "Access-Control-Max-Age": "600",
+      },
+    });
+  }
+  return c.newResponse(null, 204);
+});
+
+app.all("/api/auth/*", async (c) => {
   const response = await auth(c.env).handler(c.req.raw);
-  return response;
+  const origin = c.req.header("Origin");
+
+  // Clone the response to add CORS headers
+  const newResponse = new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers: response.headers,
+  });
+
+  // Add CORS headers if origin is allowed
+  if (origin && allowedOrigins.includes(origin)) {
+    newResponse.headers.set("Access-Control-Allow-Origin", origin);
+    newResponse.headers.set("Access-Control-Allow-Credentials", "true");
+    newResponse.headers.set(
+      "Access-Control-Allow-Methods",
+      "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+    );
+    newResponse.headers.set(
+      "Access-Control-Allow-Headers",
+      "Content-Type, Authorization"
+    );
+  }
+
+  return newResponse;
 });
 
 // Routes handling
