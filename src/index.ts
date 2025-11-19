@@ -12,12 +12,17 @@ app.use("/api/*", logger());
 app.use(
   "*",
   cors({
-    origin: [
-      "http://localhost:5173",
-      "https://coinboard-by.valafso.com",
-      "https://valafso.com",
-    ],
+    origin: (origin) => {
+      const allowedOrigins = [
+        "http://localhost:5173",
+        "https://coinboard-by.valafso.com",
+        "https://valafso.com",
+      ];
+      return origin && allowedOrigins.includes(origin) ? origin : null;
+    },
     credentials: true,
+    allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowHeaders: ["Content-Type", "Authorization"],
   })
 );
 app.use("/api/*", authMiddleware);
