@@ -12,7 +12,11 @@ app.use("/api/*", logger());
 app.use(
   "*",
   cors({
-    origin: ["http://localhost:5173", "https://coinboard-by.valafso.com"],
+    origin: [
+      "http://localhost:5173",
+      "https://coinboard-by.valafso.com",
+      "https://valafso.com",
+    ],
     credentials: true,
   })
 );
