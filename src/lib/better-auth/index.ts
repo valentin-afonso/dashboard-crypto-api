@@ -62,5 +62,14 @@ export const auth = (
         domain: "coinboard-by.valafso.com",
       },
     },
+    user: {
+      changeEmail: {
+        enabled: true,
+        updateEmailWithoutVerification: true,
+      },
+      deleteUser: {
+        enabled: true,
+      },
+    },
   });
 };
