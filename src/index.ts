@@ -21,8 +21,8 @@ app.use(
       return origin && allowedOrigins.includes(origin) ? origin : null;
     },
     credentials: true,
-    allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowHeaders: ["Content-Type", "Authorization"],
+    allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
+    allowHeaders: ["Content-Type", "Authorization", "Cookie"],
   })
 );
 app.use("/api/*", authMiddleware);
