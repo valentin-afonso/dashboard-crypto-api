@@ -61,6 +61,11 @@ export const auth = (
         enabled: true,
         domain: "coinboard-by.valafso.com",
       },
+      defaultCookieAttributes: {
+        sameSite: "none",
+        secure: true,
+        partitioned: true,
+      },
     },
     user: {
       changeEmail: {
